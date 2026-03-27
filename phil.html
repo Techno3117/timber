@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timber — Issue No. 02 · March 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --walnut:   #1E1108;
+    --dark-oak: #2F1A0E;
+    --mid-oak:  #6B3D1E;
+    --grain:    #C4864A;
+    --warm-tan: #D9A97A;
+    --cream:    #F5EDE0;
+    --parchment:#EDE0CC;
+    --ink:      #1A1210;
+    --muted:    #7A6355;
+    --accent:   #B85C2A;
+    --rule:     #C4864A;
+  }
+
+  body {
+    background: var(--walnut);
+    font-family: 'Epilogue', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      repeating-linear-gradient(88deg, transparent 0px, rgba(255,255,255,0.012) 1px, transparent 2px, transparent 18px),
+      repeating-linear-gradient(92deg, transparent 0px, rgba(0,0,0,0.04) 1px, transparent 3px, transparent 30px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    border-bottom: 1px solid var(--grain);
+    padding: 32px 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .issue-tag {
+    font-family: 'Epilogue', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grain);
+    background: rgba(196,134,74,0.12);
+    padding: 4px 10px;
+    border-left: 2px solid var(--grain);
+  }
+
+  .newsletter-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(52px, 9vw, 88px);
+    line-height: 0.92;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+  }
+
+  .newsletter-title em {
+    font-style: italic;
+    color: var(--warm-tan);
+  }
+
+  .masthead-meta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 10px;
+  }
+
+  .masthead-meta span {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .masthead-meta .dot {
+    width: 3px; height: 3px;
+    background: var(--grain);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--warm-tan);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── NAV STRIP ── */
+  .nav-strip {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(196,134,74,0.25);
+    margin-bottom: 48px;
+    animation: fadeDown 0.8s 0.1s ease both;
+    overflow-x: auto;
+  }
+
+  .nav-strip a {
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 18px;
+    border-right: 1px solid rgba(196,134,74,0.2);
+    transition: color 0.2s, background 0.2s;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .nav-strip a:hover { color: var(--cream); background: rgba(196,134,74,0.08); }
+  .nav-strip a.active { color: var(--cream); border-bottom: 2px solid var(--grain); }
+
+  /* ── FEATURED ARTICLE ── */
+  .featured-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .featured-label::before {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--grain);
+  }
+
+  .featured-label span {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grain);
+  }
+
+  .featured-article {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    border: 1px solid rgba(196,134,74,0.3);
+    background: linear-gradient(135deg, rgba(47,26,14,0.9) 0%, rgba(30,17,8,0.95) 100%);
+    margin-bottom: 56px;
+    animation: fadeUp 0.8s 0.25s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-article::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--grain), var(--accent), var(--warm-tan));
+  }
+
+  .featured-body {
+    padding: 40px;
+    border-right: 1px solid rgba(196,134,74,0.2);
+  }
+
+  .article-category {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grain);
+    margin-bottom: 16px;
+  }
+
+  .featured-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: clamp(26px, 3.5vw, 38px);
+    line-height: 1.12;
+    color: var(--cream);
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .featured-headline em {
+    font-style: italic;
+    color: var(--warm-tan);
+  }
+
+  .featured-deck {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--warm-tan);
+    margin-bottom: 24px;
+    border-left: 2px solid var(--grain);
+    padding-left: 16px;
+  }
+
+  .featured-byline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .byline-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mid-oak), var(--grain));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    color: var(--cream);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .byline-info { display: flex; flex-direction: column; gap: 2px; }
+
+  .byline-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--cream);
+  }
+
+  .byline-date {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .read-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--grain);
+    color: var(--walnut);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 11px 22px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .read-btn:hover { background: var(--warm-tan); transform: translateX(3px); }
+  .read-btn svg { transition: transform 0.2s; }
+  .read-btn:hover svg { transform: translateX(3px); }
+
+  /* ── ARTICLE SIDEBAR ── */
+  .featured-sidebar {
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sidebar-title {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grain);
+    margin-bottom: 24px;
+  }
+
+  .toc-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(196,134,74,0.15);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .toc-item:last-child { border-bottom: none; }
+  .toc-item:hover { opacity: 0.75; }
+
+  .toc-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: rgba(196,134,74,0.3);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 28px;
+  }
+
+  .toc-text { display: flex; flex-direction: column; gap: 4px; }
+
+  .toc-section {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .toc-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  /* ── ARTICLE BODY ── */
+  .article-body-wrap {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 48px;
+    margin-bottom: 56px;
+    animation: fadeUp 0.8s 0.35s ease both;
+  }
+
+  .article-full h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--cream);
+    margin: 32px 0 12px;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .article-full h2::before {
+    content: '§';
+    color: var(--grain);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .article-full p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.75;
+    color: #C8B8A8;
+    margin-bottom: 18px;
+  }
+
+  .article-full p em {
+    font-style: italic;
+    color: var(--warm-tan);
+  }
+
+  .pull-quote {
+    border-left: 3px solid var(--grain);
+    padding: 20px 24px;
+    margin: 32px 0;
+    background: rgba(196,134,74,0.06);
+  }
+
+  .pull-quote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px !important;
+    font-style: italic;
+    line-height: 1.5 !important;
+    color: var(--warm-tan) !important;
+    margin: 0 !important;
+  }
+
+  .article-rule {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+    color: var(--grain);
+    font-size: 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+
+  .article-rule::before, .article-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--grain));
+  }
+
+  .article-rule::after {
+    background: linear-gradient(90deg, var(--grain), transparent);
+  }
+
+  /* ── STICKY SIDEBAR ── */
+  .sticky-aside {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .aside-block {
+    border: 1px solid rgba(196,134,74,0.25);
+    padding: 20px;
+    background: rgba(47,26,14,0.5);
+  }
+
+  .aside-label {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grain);
+    margin-bottom: 14px;
+  }
+
+  .aside-block p {
+    font-size: 12px;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .aside-block p em {
+    font-style: italic;
+    color: var(--warm-tan);
+  }
+
+  .term-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(196,134,74,0.12);
+  }
+
+  .term-item:last-child { border-bottom: none; }
+
+  .term-word {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--warm-tan);
+    margin-bottom: 3px;
+  }
+
+  .term-def {
+    font-size: 10px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    margin-top: 60px;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  .section-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grain);
+    flex-shrink: 0;
+  }
+
+  .section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(196,134,74,0.25);
+  }
+
+  /* ── ARTICLE CARDS GRID ── */
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(196,134,74,0.2);
+    border: 1px solid rgba(196,134,74,0.2);
+    margin-bottom: 56px;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+
+  .article-card {
+    background: var(--dark-oak);
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: background 0.25s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .article-card:hover { background: #3A2214; }
+
+  .card-category {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grain);
+  }
+
+  .card-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.25;
+    color: var(--cream);
+    font-weight: 600;
+    flex: 1;
+  }
+
+  .card-excerpt {
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+
+  .card-author {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .card-read {
+    font-size: 9px;
+    color: var(--grain);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* ── SUBSCRIBE BAND ── */
+  .subscribe-band {
+    border: 1px solid rgba(196,134,74,0.35);
+    background: linear-gradient(135deg, rgba(107,61,30,0.3) 0%, rgba(47,26,14,0.8) 100%);
+    padding: 44px 48px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.8s 0.55s ease both;
+  }
+
+  .subscribe-band::before {
+    content: 'TIMBER';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 140px;
+    font-weight: 700;
+    color: rgba(196,134,74,0.05);
+    letter-spacing: -0.05em;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .sub-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .sub-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 420px;
+  }
+
+  .sub-form { display: flex; gap: 0; flex-shrink: 0; }
+
+  .sub-input {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(196,134,74,0.4);
+    border-right: none;
+    padding: 12px 18px;
+    color: var(--cream);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    width: 200px;
+    outline: none;
+  }
+
+  .sub-input::placeholder { color: var(--muted); }
+  .sub-input:focus { border-color: var(--grain); }
+
+  .sub-btn {
+    background: var(--grain);
+    border: 1px solid var(--grain);
+    color: var(--walnut);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .sub-btn:hover { background: var(--warm-tan); }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid rgba(196,134,74,0.2);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    animation: fadeUp 0.8s 0.6s ease both;
+    flex-wrap: wrap;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--warm-tan);
+    font-style: italic;
+  }
+
+  .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+
+  .footer-links a {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--grain); }
+
+  .footer-copy {
+    font-size: 9px;
+    color: rgba(122,99,85,0.5);
+    letter-spacing: 0.08em;
+    align-self: flex-end;
+  }
+
+  /* ── ARTICLE MODAL OVERLAY ── */
+  .article-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,8,4,0.97);
+    z-index: 100;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+
+  .article-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .overlay-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 60px 32px 80px;
+  }
+
+  .overlay-close {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: 1px solid rgba(196,134,74,0.3);
+    color: var(--muted);
+    font-family: 'Epilogue', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    cursor: pointer;
+    margin-bottom: 44px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .overlay-close:hover { color: var(--cream); border-color: var(--grain); }
+
+  .overlay-cat {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--grain);
+    margin-bottom: 16px;
+  }
+
+  .overlay-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.08;
+    color: var(--cream);
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .overlay-deck {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--warm-tan);
+    border-left: 2px solid var(--grain);
+    padding-left: 18px;
+    margin-bottom: 36px;
+  }
+
+  .overlay-divider {
+    height: 1px;
+    background: rgba(196,134,74,0.2);
+    margin: 32px 0;
+  }
+
+  .overlay-body p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    line-height: 1.8;
+    color: #C0AEAA;
+    margin-bottom: 22px;
+  }
+
+  .overlay-body p em {
+    font-style: italic;
+    color: var(--warm-tan);
+  }
+
+  .overlay-body h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--cream);
+    margin: 40px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .overlay-body h2::before {
+    content: '§';
+    color: var(--grain);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .overlay-body .pull-quote {
+    border-left: 3px solid var(--grain);
+    padding: 20px 24px;
+    margin: 36px 0;
+    background: rgba(196,134,74,0.06);
+  }
+
+  .overlay-body .pull-quote p {
+    font-size: 22px !important;
+    font-style: italic;
+    color: var(--warm-tan) !important;
+    margin: 0 !important;
+  }
+
+  /* ── ARCHIVE STYLES ── */
+  .archive-page { display: none; }
+
+  .archive-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 24px;
+    background: var(--dark-oak);
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid rgba(196,134,74,0.1);
+  }
+
+  .archive-row:last-child { border-bottom: none; }
+  .archive-row:hover { background: #3A2214; }
+
+  .archive-cat {
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--grain);
+    flex-shrink: 0;
+    width: 80px;
+  }
+
+  .archive-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--cream);
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .archive-meta {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* ── ABOUT PAGE ── */
+  .ab-wrap {
+    font-family: 'Epilogue', sans-serif;
+    background: #1E1108;
+    color: #F5EDE0;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .ab-wrap[data-section="about"] { display: none; }
+
+  .ab-hero {
+    border-bottom: 1px solid #C4864A;
+    padding: 44px 48px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ab-hero::before {
+    content: 'TIMBER';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 140px;
+    font-weight: 700;
+    color: rgba(196,134,74,0.05);
+    letter-spacing: -0.05em;
+    pointer-events: none;
+  }
+
+  .ab-tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #C4864A;
+    background: rgba(196,134,74,0.12);
+    padding: 4px 10px;
+    border-left: 2px solid #C4864A;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .ab-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 6vw, 64px);
+    font-weight: 700;
+    line-height: 1;
+    color: #F5EDE0;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  .ab-title em { font-style: italic; color: #D9A97A; }
+
+  .ab-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #D9A97A;
+    border-left: 2px solid #C4864A;
+    padding-left: 16px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  .ab-body { padding: 48px; }
+
+  .ab-section-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .ab-section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: #C4864A;
+  }
+
+  .ab-section-label span {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #C4864A;
+  }
+
+  .ab-origin {
+    background: rgba(47,26,14,0.8);
+    border: 1px solid rgba(196,134,74,0.25);
+    padding: 32px;
+    margin-bottom: 48px;
+    position: relative;
+  }
+
+  .ab-origin::before {
+    content: '§';
+    position: absolute;
+    top: 28px;
+    right: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    color: rgba(196,134,74,0.15);
+    font-style: italic;
+  }
+
+  .ab-origin p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.8;
+    color: #C8B8A8;
+    margin-bottom: 16px;
+  }
+
+  .ab-origin p:last-child { margin-bottom: 0; }
+  .ab-origin p em { font-style: italic; color: #D9A97A; }
+
+  .ab-origin .highlight {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-style: italic;
+    color: #D9A97A;
+    border-left: 3px solid #C4864A;
+    padding: 16px 20px;
+    background: rgba(196,134,74,0.06);
+    margin: 24px 0;
+    line-height: 1.5;
+  }
+
+  .ab-team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(196,134,74,0.2);
+    border: 1px solid rgba(196,134,74,0.2);
+    margin-bottom: 40px;
+  }
+
+  .ab-member { background: #2F1A0E; padding: 28px 24px; }
+
+  .ab-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6B3D1E, #C4864A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: #F5EDE0;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .ab-member-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #F5EDE0;
+    margin-bottom: 4px;
+  }
+
+  .ab-member-role {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C4864A;
+    margin-bottom: 12px;
+  }
+
+  .ab-member-bio { font-size: 12px; line-height: 1.65; color: #7A6355; }
+
+  .ab-rule {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+    color: #C4864A;
+    font-size: 18px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+  }
+
+  .ab-rule::before,
+  .ab-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+  }
+
+  .ab-rule::before { background: linear-gradient(90deg, transparent, #C4864A); }
+  .ab-rule::after { background: linear-gradient(90deg, #C4864A, transparent); }
+
+  .ab-mission {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(196,134,74,0.15);
+    border: 1px solid rgba(196,134,74,0.2);
+    margin-bottom: 40px;
+  }
+
+  .ab-mission-item { background: #2F1A0E; padding: 24px; }
+
+  .ab-mission-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: rgba(196,134,74,0.25);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .ab-mission-head {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #F5EDE0;
+    margin-bottom: 8px;
+  }
+
+  .ab-mission-text { font-size: 11px; line-height: 1.65; color: #7A6355; }
+
+  .ab-footer-note {
+    border-top: 1px solid rgba(196,134,74,0.2);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .ab-footer-note span { font-size: 10px; letter-spacing: 0.12em; color: #7A6355; }
+  .ab-footer-note strong { color: #C4864A; font-weight: 500; }
+
+  /* ── TAB SECTIONS — hidden by default when filtering ── */
+  [data-section] { transition: opacity 0.3s ease; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .featured-article { grid-template-columns: 1fr; }
+    .featured-sidebar { display: none; }
+    .article-body-wrap { grid-template-columns: 1fr; }
+    .sticky-aside { display: none; }
+    .articles-grid { grid-template-columns: 1fr; }
+    .subscribe-band { grid-template-columns: 1fr; }
+    .sub-form { flex-direction: column; }
+    .sub-input { border-right: 1px solid rgba(196,134,74,0.4); border-bottom: none; width: 100%; }
+    .footer { flex-direction: column; }
+    .archive-row { flex-wrap: wrap; }
+    .archive-cat { width: auto; }
+  }
+
+  @media (max-width: 600px) {
+    .ab-hero, .ab-body { padding: 28px 24px; }
+    .ab-team-grid { grid-template-columns: 1fr; }
+    .ab-mission { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="issue-tag">Issue No. 02 &nbsp;·&nbsp; March 2026</div>
+    <div class="newsletter-title">Tim<em>ber</em></div>
+    <div class="masthead-meta">
+      <span class="tagline">Ideas cut to the grain</span>
+      <span class="dot"></span>
+      <span>Politics · Philosophy · Economics · Culture</span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="nav-strip">
+    <a href="#" class="active" data-tab="all" onclick="switchTab(event,'all')">Featured</a>
+    <a href="#" data-tab="philosophy" onclick="switchTab(event,'philosophy')">Philosophy</a>
+    <a href="#" data-tab="politics" onclick="switchTab(event,'politics')">Politics</a>
+    <a href="#" data-tab="economics" onclick="switchTab(event,'economics')">Economics</a>
+    <a href="#" data-tab="culture" onclick="switchTab(event,'culture')">Culture</a>
+    <a href="about.html">About</a>
+    <a href="#" data-tab="archive" onclick="switchTab(event,'archive')">Archive</a>
+  </nav>
+
+  <!-- FEATURED LABEL -->
+  <div class="featured-label" data-section="all politics"><span>Lead Essay</span></div>
+
+  <!-- FEATURED ARTICLE: Empire Always Ends -->
+  <div class="featured-article" data-section="all politics">
+    <div class="featured-body">
+      <div class="article-category">Politics · Imperial Decline</div>
+      <h1 class="featured-headline">The Empire<br><em>Always Ends</em></h1>
+      <p class="featured-deck">From Suez to Washington's overreach — great powers do not fall because they are conquered. They fall because they overreach, alienate, and exhaust the very world that once tolerated their dominance.</p>
+      <div class="featured-byline">
+        <div class="byline-avatar">T</div>
+        <div class="byline-info">
+          <span class="byline-name">The Editors</span>
+          <span class="byline-date">27 March 2026 &nbsp;·&nbsp; 12 min read</span>
+        </div>
+      </div>
+      <button class="read-btn" onclick="openArticle('empire')">
+        Read Essay
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="featured-sidebar">
+      <div class="sidebar-title">In this essay</div>
+      <div class="toc-item"><div class="toc-num">I</div><div class="toc-text"><span class="toc-section">The Suez Wound</span><span class="toc-heading">How Britain's imperial pretensions collapsed beside a canal</span></div></div>
+      <div class="toc-item"><div class="toc-num">II</div><div class="toc-text"><span class="toc-section">The American Parallel</span><span class="toc-heading">Fiscal fragility, unilateralism, and the widening cracks</span></div></div>
+      <div class="toc-item"><div class="toc-num">III</div><div class="toc-text"><span class="toc-section">Soft Power</span><span class="toc-heading">Burning through narrative capital at an accelerating rate</span></div></div>
+      <div class="toc-item"><div class="toc-num">IV</div><div class="toc-text"><span class="toc-section">What Comes Next</span><span class="toc-heading">Managed retreat, or sudden humiliation?</span></div></div>
+    </div>
+  </div>
+
+  <!-- ARTICLE BODY PREVIEW: Empire -->
+  <div class="article-body-wrap" data-section="all politics">
+    <div class="article-full">
+      <p>There is a recurring pattern in the history of great powers: they do not fall because they are conquered, they fall because they overreach, alienate, and finally exhaust the very world that once tolerated their dominance. Britain discovered this in the autumn of 1956, standing in the rubble of its imperial pretensions beside the Suez Canal.</p>
+      <p>When Egyptian President Gamal Abdel Nasser nationalized the Suez Canal Company in July 1956, Britain, France, and Israel devised a secret arrangement — the Protocol of Sèvres — to retake it by force. The plan was militarily successful and geopolitically catastrophic. President Eisenhower, furious at being excluded, forced Britain to withdraw by threatening to destabilize the pound sterling.</p>
+      <div class="pull-quote"><p>"The Suez crisis did not cause the end of British hegemony — it merely revealed it."</p></div>
+      <h2>The American Parallel</h2>
+      <p>The United States today occupies a structurally analogous position to Britain in the early 1950s. It commands the world's largest military, its currency remains the dominant global reserve, and it possesses an unmatched network of alliances. And yet the cracks are widening in ways that would be familiar to any historian of British decline.</p>
+      <p>The U.S. national debt surpassed $36 trillion in 2024, with annual interest payments exceeding $1 trillion for the first time in history. The dollar's share of global foreign exchange reserves has declined from roughly 71% in 2000 to approximately 58% in 2023. The BRICS bloc has accelerated discussions around alternative settlement currencies.</p>
+      <div class="article-rule">✦</div>
+      <h2>Soft Power's Quiet Erosion</h2>
+      <p>Suez cost Britain not just a military campaign but a story. The narrative of benevolent empire — of the civilizing mission and the rule of law — collapsed overnight. Britain became, in the eyes of much of the world, simply another bully. The United States is now burning through its own narrative capital at an accelerating rate.</p>
+      <button class="read-btn" onclick="openArticle('empire')" style="margin-top: 12px;">Continue Reading <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <aside class="sticky-aside">
+      <div class="aside-block">
+        <div class="aside-label">Key Events</div>
+        <div class="term-item"><div class="term-word">Suez Crisis, 1956</div><div class="term-def">Britain's secret military operation to retake the Canal, undone by U.S. economic coercion within weeks.</div></div>
+        <div class="term-item"><div class="term-word">Protocol of Sèvres</div><div class="term-def">The secret Anglo-French-Israeli agreement to retake the Suez Canal by coordinated military force.</div></div>
+        <div class="term-item"><div class="term-word">BRICS Expansion, 2024</div><div class="term-def">Six new members including Saudi Arabia and UAE accelerate moves away from dollar-denominated trade.</div></div>
+      </div>
+      <div class="aside-block">
+        <div class="aside-label">References</div>
+        <p style="font-size:11px; color: var(--muted); line-height: 1.6;">Kyle, <em>Suez: Britain's End of Empire</em> (1991)<br><br>Kunz, <em>The Economic Diplomacy of the Suez Crisis</em> (1991)<br><br>IMF, <em>COFER Report</em> (2024)</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- SECTION: MORE ARTICLES ROW 1 -->
+  <div class="section-header" data-section="all"><h3>Also in this issue</h3></div>
+
+  <div class="articles-grid" data-section="all">
+    <div class="article-card" onclick="openArticle('politeia')">
+      <div class="card-category">Politics</div>
+      <div class="card-headline">Politeia: On the Meaning of Politics</div>
+      <div class="card-excerpt">From Hobbes's domination to Arendt's equality — what politics actually is depends on who you ask, and the answer matters enormously.</div>
+      <div class="card-meta"><span class="card-author">The Editors</span><span class="card-read">Read →</span></div>
+    </div>
+    <div class="article-card" onclick="openArticle('nihilism')">
+      <div class="card-category">Philosophy</div>
+      <div class="card-headline">The Comfortable Abyss</div>
+      <div class="card-excerpt">On nihilism and the world it is quietly building — Nietzsche's warning, misread as an invitation to surrender.</div>
+      <div class="card-meta"><span class="card-author">The Editors</span><span class="card-read">Read →</span></div>
+    </div>
+    <div class="article-card" onclick="openArticle('bastar')">
+      <div class="card-category">Politics</div>
+      <div class="card-headline">The Last Forest: What India Is Really Doing in Bastar</div>
+      <div class="card-excerpt">Operation Kagar has a deadline, a bounty system, and 60,000 troops. What it does not have is an honest answer to why the war exists.</div>
+      <div class="card-meta"><span class="card-author">The Editors</span><span class="card-read">Read →</span></div>
+    </div>
+  </div>
+
+  <!-- FEATURED ARTICLE 2: Trans Amendment -->
+  <div class="featured-label" data-section="all culture" style="margin-top: 16px;"><span>Culture</span></div>
+
+  <div class="featured-article" data-section="all culture">
+    <div class="featured-body">
+      <div class="article-category">Culture · Law · Human Rights</div>
+      <h1 class="featured-headline">Old Dog,<br><em>New Tricks</em></h1>
+      <p class="featured-deck">India's Trans Amendment Bill 2026 is a colonial relic in modern clothing — seven words written in past tense, attempting to reach backward through time and unmake thousands of people.</p>
+      <div class="featured-byline">
+        <div class="byline-avatar">T</div>
+        <div class="byline-info">
+          <span class="byline-name">The Editors</span>
+          <span class="byline-date">27 March 2026 &nbsp;·&nbsp; 14 min read</span>
+        </div>
+      </div>
+      <button class="read-btn" onclick="openArticle('trans')">Read Essay <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="featured-sidebar">
+      <div class="sidebar-title">In this essay</div>
+      <div class="toc-item"><div class="toc-num">I</div><div class="toc-text"><span class="toc-section">What the Bill Does</span><span class="toc-heading">Stripping self-perceived identity and inserting mandatory medical gatekeeping</span></div></div>
+      <div class="toc-item"><div class="toc-num">II</div><div class="toc-text"><span class="toc-section">The Numbers</span><span class="toc-heading">92% excluded from formal economy, 31% have attempted suicide</span></div></div>
+      <div class="toc-item"><div class="toc-num">III</div><div class="toc-text"><span class="toc-section">The Colonial Echo</span><span class="toc-heading">The Criminal Tribes Act of 1871 and the circle that was not broken</span></div></div>
+      <div class="toc-item"><div class="toc-num">IV</div><div class="toc-text"><span class="toc-section">What Comes Next</span><span class="toc-heading">Constitutional challenge, jurisprudence, and lives in the balance</span></div></div>
+    </div>
+  </div>
+
+  <!-- ARTICLE BODY PREVIEW: Trans -->
+  <div class="article-body-wrap" data-section="all culture">
+    <div class="article-full">
+      <p>On March 13, 2026, Union Minister Virendra Kumar introduced the Transgender Persons (Protection of Rights) Amendment Bill in the Lok Sabha, and within hours, trans activists across India had read it. By the afternoon of March 16, lawyers, journalists, community organisers and queer activists had crowded into a room at the Women's Press Club in Delhi — united by a shared and urgent recognition: a bill introduced in the name of transgender people had been designed to erase them.</p>
+      <p>The bill passed both houses within two weeks. Parliament moved with remarkable speed on a bill that trans communities, legal experts, and human rights organisations across the country had condemned from the moment they laid eyes on it. The speed was telling. So was the silence.</p>
+      <div class="pull-quote"><p>"Seven words, written in past tense, attempting to reach backward through time and retrospectively delegitimise the legal identities of thousands of people. It is a legislative attempt to unmake people."</p></div>
+      <h2>What the Bill Actually Does</h2>
+      <p>The bill strips away the most foundational right the 2019 Act had encoded: the right to self-perceived gender identity. A transgender person may no longer obtain recognition through self-declaration. They must now appear before a Medical Board and obtain the board's recommendation before a District Magistrate can issue an identity certificate.</p>
+      <p>The new definition is deliberately narrow — limiting recognition to persons with named socio-cultural identities such as kinner, hijra, aravani, and jogta, or to those with congenital variations in chromosomes, hormones, or genitalia. Transmen, non-binary people, and transwomen outside the named categories have, in the words of one legal analysis, "vanished from the definition."</p>
+      <div class="article-rule">✦</div>
+      <h2>The British Did This First</h2>
+      <p>Part II of the Criminal Tribes Act, 1871 was titled "Of Eunuchs." It mandated that police maintain registers of eunuchs suspected of sodomy, kidnapping or castration. The explicit goal, documented in colonial correspondence as early as 1865, was the "gradual extinction" of the hijra community. The word "eunuch" — which the Act used to criminalise everyone who did not conform to British standards of masculinity — has now been inserted into the 2026 Amendment Bill as a formal legal category. The circle of colonial logic has been closed, not broken.</p>
+      <button class="read-btn" onclick="openArticle('trans')" style="margin-top: 12px;">Continue Reading <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <aside class="sticky-aside">
+      <div class="aside-block">
+        <div class="aside-label">Key Figures</div>
+        <div class="term-item"><div class="term-word">NALSA Judgment, 2014</div><div class="term-def">Supreme Court ruling: gender identity is self-perceived; medical procedures cannot be a precondition for legal recognition.</div></div>
+        <div class="term-item"><div class="term-word">Puttaswamy, 2017</div><div class="term-def">Right to privacy as fundamental right, explicitly including dignity of gender identity.</div></div>
+        <div class="term-item"><div class="term-word">32,000 / 5 Lakh</div><div class="term-def">Identity cards issued vs. estimated transgender population — a ratio that exposes the failure before the new bill was even passed.</div></div>
+      </div>
+      <div class="aside-block">
+        <div class="aside-label">Context</div>
+        <p style="font-size:11px; color: var(--muted); line-height: 1.6;">Criminal Tribes Act, 1871<br><br>Section 377 decriminalised, 2018<br><br>Yogyakarta Principles on gender identity</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- SECTION: Economics Row -->
+  <div class="section-header" data-section="all economics"><h3>Economics</h3></div>
+
+  <div class="articles-grid" data-section="all economics">
+    <div class="article-card" onclick="openArticle('pinktax')">
+      <div class="card-category">Economics</div>
+      <div class="card-headline">The Pink Tax in India</div>
+      <div class="card-excerpt">A hidden levy India can no longer afford to ignore — from pharmacy shelves to the structural erosion of women's economic participation.</div>
+      <div class="card-meta"><span class="card-author">Anvita Tomar</span><span class="card-read">Read →</span></div>
+    </div>
+    <div class="article-card" onclick="openArticle('queer')">
+      <div class="card-category">Economics</div>
+      <div class="card-headline">Queer Out of the Economy?</div>
+      <div class="card-excerpt">LGBTQIA+ economic exclusion is not merely a moral failing — it is a macroeconomic opportunity cost that falsely overstates the potential of the economy.</div>
+      <div class="card-meta"><span class="card-author">Shabd Tanwar</span><span class="card-read">Read →</span></div>
+    </div>
+    <div class="article-card" onclick="openArticle('braindrain')">
+      <div class="card-category">Economics</div>
+      <div class="card-headline">Why India's Best Talent Leaves and Never Returns</div>
+      <div class="card-excerpt">It is not the money. It is the sum of systems that do not work, the three hours lost to traffic, and institutions that treat professionals as subjects to be controlled.</div>
+      <div class="card-meta"><span class="card-author">The Editors</span><span class="card-read">Read →</span></div>
+    </div>
+  </div>
+
+  <!-- FEATURED ARTICLE 3: Postmodernism -->
+  <div class="featured-label" data-section="all philosophy" style="margin-top: 16px;"><span>Philosophy</span></div>
+
+  <div class="featured-article" data-section="all philosophy">
+    <div class="featured-body">
+      <div class="article-category">Philosophy · Critical Theory</div>
+      <h1 class="featured-headline">The Paralysis of<br><em>Endless Interpretation</em></h1>
+      <p class="featured-deck">How postmodernism, Foucault, Derrida, and the dissolution of objective truth became capitalism's most elegant ideological shield — and what Marx would have made of all of it.</p>
+      <div class="featured-byline">
+        <div class="byline-avatar">T</div>
+        <div class="byline-info">
+          <span class="byline-name">The Editors</span>
+          <span class="byline-date">27 March 2026 &nbsp;·&nbsp; 10 min read</span>
+        </div>
+      </div>
+      <button class="read-btn" onclick="openArticle('postmodern')">Read Essay <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="featured-sidebar">
+      <div class="sidebar-title">In this essay</div>
+      <div class="toc-item"><div class="toc-num">I</div><div class="toc-text"><span class="toc-section">Foucault</span><span class="toc-heading">Power-knowledge and the production of truth</span></div></div>
+      <div class="toc-item"><div class="toc-num">II</div><div class="toc-text"><span class="toc-section">Consequences</span><span class="toc-heading">When critique dissolves the ground beneath itself</span></div></div>
+      <div class="toc-item"><div class="toc-num">III</div><div class="toc-text"><span class="toc-section">Derrida</span><span class="toc-heading">Specters of Marx and the limits of deconstruction</span></div></div>
+      <div class="toc-item"><div class="toc-num">IV</div><div class="toc-text"><span class="toc-section">Synthesis</span><span class="toc-heading">Towards a grounded radical politics</span></div></div>
+    </div>
+  </div>
+
+  <!-- ARTICLE BODY PREVIEW: Postmodern -->
+  <div class="article-body-wrap" data-section="all philosophy">
+    <div class="article-full">
+      <p>There is a peculiar irony at the heart of postmodern thought. A philosophical tradition born from radical disillusionment with the status quo — from the wreckage of colonialism, from the failures of both liberal democracy and Soviet communism — has arguably become one of the most powerful ideological shields that the capitalist order has ever enjoyed. Not through coercion, not through propaganda, but through the far more elegant mechanism of convincing the left that there is no ground firm enough to stand on from which to fight back.</p>
+      <div class="pull-quote"><p>"You cannot build a labor movement on the premise that 'labor' is a discursive category."</p></div>
+      <h2>Foucault's Radical Inheritance</h2>
+      <p>To understand how this happened, we need to begin with Michel Foucault. His concept of <em>pouvoir-savoir</em> — power-knowledge — demonstrated that what counts as "truth" in any given era is inseparable from the power structures that produce and enforce it. The asylum does not merely confine the mad; it creates the very concept of madness as a means of social control.</p>
+      <p>This is a profound and genuinely illuminating insight. The problem arrives when it is pushed to its logical extreme: if all truth is a product of power, then there is no truth at all — only competing narratives, each equally valid or equally suspect.</p>
+      <div class="article-rule">✦</div>
+      <h2>Derrida and the Limits of Différance</h2>
+      <p>The most revealing case study is Jacques Derrida, whose <em>différance</em> — a coinage capturing both difference and deferral — became a powerful literary tool that, when applied to political reality, dissolves the stable ground needed for collective action. In <em>Specters of Marx</em> (1993), Derrida returned to Marx as a thinker of justice — but a "messianism without messiah" is philosophically elegant and practically useless. You cannot strike for an ineffable horizon.</p>
+      <button class="read-btn" onclick="openArticle('postmodern')" style="margin-top: 12px;">Continue Reading <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <aside class="sticky-aside">
+      <div class="aside-block">
+        <div class="aside-label">Key Concepts</div>
+        <div class="term-item"><div class="term-word">Pouvoir-Savoir</div><div class="term-def">Foucault's power-knowledge: the idea that truth and power are mutually constitutive, not independent.</div></div>
+        <div class="term-item"><div class="term-word">Différance</div><div class="term-def">Derrida's neologism: meaning is endlessly deferred, never fully present in any sign or system.</div></div>
+        <div class="term-item"><div class="term-word">Specters of Marx</div><div class="term-def">Derrida's 1993 return to Marx as a thinker of justice and unresolvable historical haunting.</div></div>
+      </div>
+      <div class="aside-block">
+        <div class="aside-label">Further Reading</div>
+        <p style="font-size:11px; color: var(--muted); line-height: 1.6;">Foucault, <em>Discipline and Punish</em> (1975)<br><br>Derrida, <em>Specters of Marx</em> (1993)<br><br>Marx, <em>Theses on Feuerbach</em> (1845)</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Culture Section -->
+  <div class="section-header" data-section="all culture"><h3>Culture</h3></div>
+
+  <div class="articles-grid" data-section="all culture">
+    <div class="article-card" onclick="openArticle('ethnographic')">
+      <div class="card-category">Culture · Ethnography</div>
+      <div class="card-headline">Ethnographic Report: Sector 120</div>
+      <div class="card-excerpt">A close reading of social norms and moral policing in a Noida public park — where the evening belongs to teenagers, and judgment belongs to everyone.</div>
+      <div class="card-meta"><span class="card-author">Yousuf Rami</span><span class="card-read">Read →</span></div>
+    </div>
+    <div class="article-card" onclick="openArticle('nihilism')">
+      <div class="card-category">Philosophy</div>
+      <div class="card-headline">The Comfortable Abyss</div>
+      <div class="card-excerpt">Nihilism doesn't wear black anymore. It wears athleisure and calls itself "realistic" — and it is tyranny's most reliable silent collaborator.</div>
+      <div class="card-meta"><span class="card-author">The Editors</span><span class="card-read">Read →</span></div>
+    </div>
+    <div class="article-card" onclick="openArticle('bastar')">
+      <div class="card-category">Politics · Reportage</div>
+      <div class="card-headline">The Last Forest</div>
+      <div class="card-excerpt">Operation Kagar is completing a 150-year project. The British wanted the minerals and the timber. Contemporary India wants the minerals and the minerals.</div>
+      <div class="card-meta"><span class="card-author">The Editors</span><span class="card-read">Read →</span></div>
+    </div>
+  </div>
+
+  <!-- ABOUT TAB PAGE -->
+  <div class="ab-wrap" data-section="about">
+    <div class="ab-hero">
+      <div class="ab-tag">About Us &nbsp;·&nbsp; Issue No. 02 · March 2026</div>
+      <div class="ab-title">About Tim<em>ber</em></div>
+      <div class="ab-subtitle">
+        A student publication built on the conviction that ideas deserve more than a grade — they deserve an audience.
+      </div>
+    </div>
+
+    <div class="ab-body">
+      <div class="ab-section-label"><span>Our origin</span></div>
+
+      <div class="ab-origin">
+        <p>Timber began as a CIA project at Christ University...</p>
+        <div class="highlight">"If we were going to write... we might as well do it properly."</div>
+        <p>It evolved into a serious editorial platform.</p>
+      </div>
+
+      <div class="ab-section-label"><span>The team</span></div>
+
+      <div class="ab-team-grid">
+        <div class="ab-member">
+          <div class="ab-avatar">YR</div>
+          <div class="ab-member-name">Yousuf Rami</div>
+          <div class="ab-member-role">Founder</div>
+        </div>
+        <div class="ab-member">
+          <div class="ab-avatar">R</div>
+          <div class="ab-member-name">Ritik</div>
+          <div class="ab-member-role">Co-founder</div>
+        </div>
+        <div class="ab-member">
+          <div class="ab-avatar">Ed</div>
+          <div class="ab-member-name">Editors</div>
+          <div class="ab-member-role">Contributors</div>
+        </div>
+      </div>
+
+      <div class="ab-section-label"><span>What we stand for</span></div>
+
+      <div class="ab-mission">
+        <div class="ab-mission-item">Rigour over rhetoric</div>
+        <div class="ab-mission-item">Ideas have consequences</div>
+        <div class="ab-mission-item">Student voices matter</div>
+        <div class="ab-mission-item">Cut against the grain</div>
+      </div>
+
+      <div class="ab-footer-note">
+        <span>Christ University · CIA Project</span>
+        <span>March 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHIVE TAB PAGE -->
+  <div class="archive-page" data-section="archive">
+    <div style="padding: 60px 0 40px; text-align: center;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size: clamp(32px,5vw,52px); font-weight:700; color:var(--cream); margin-bottom:12px;">Archive</div>
+      <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:16px; color:var(--warm-tan);">All essays from Issue No. 02 — March 2026</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1px; background:rgba(196,134,74,0.2); border:1px solid rgba(196,134,74,0.2); margin-bottom:56px;">
+      <div class="archive-row" onclick="openArticle('empire')"><span class="archive-cat">Politics</span><span class="archive-title">The Empire Always Ends: From Suez to Washington's Overreach</span><span class="archive-meta">The Editors &nbsp;·&nbsp; 12 min</span></div>
+      <div class="archive-row" onclick="openArticle('politeia')"><span class="archive-cat">Politics</span><span class="archive-title">Politeia: On the Meaning of Politics</span><span class="archive-meta">The Editors &nbsp;·&nbsp; 8 min</span></div>
+      <div class="archive-row" onclick="openArticle('bastar')"><span class="archive-cat">Politics</span><span class="archive-title">The Last Forest: What India Is Really Doing in Bastar</span><span class="archive-meta">The Editors &nbsp;·&nbsp; 14 min</span></div>
+      <div class="archive-row" onclick="openArticle('postmodern')"><span class="archive-cat">Philosophy</span><span class="archive-title">The Paralysis of Endless Interpretation</span><span class="archive-meta">The Editors &nbsp;·&nbsp; 10 min</span></div>
+      <div class="archive-row" onclick="openArticle('nihilism')"><span class="archive-cat">Philosophy</span><span class="archive-title">The Comfortable Abyss: On Nihilism and the World It Is Building</span><span class="archive-meta">The Editors &nbsp;·&nbsp; 8 min</span></div>
+      <div class="archive-row" onclick="openArticle('pinktax')"><span class="archive-cat">Economics</span><span class="archive-title">The Pink Tax in India: A Hidden Levy India Can No Longer Afford to Ignore</span><span class="archive-meta">Anvita Tomar &nbsp;·&nbsp; 10 min</span></div>
+      <div class="archive-row" onclick="openArticle('queer')"><span class="archive-cat">Economics</span><span class="archive-title">Queer Out of the Economy? Exclusionary Implications for Macroeconomic Analysis</span><span class="archive-meta">Shabd Tanwar &nbsp;·&nbsp; 9 min</span></div>
+      <div class="archive-row" onclick="openArticle('braindrain')"><span class="archive-cat">Economics</span><span class="archive-title">Why India's Best Talent Leaves and Never Returns</span><span class="archive-meta">The Editors &nbsp;·&nbsp; 11 min</span></div>
+      <div class="archive-row" onclick="openArticle('trans')"><span class="archive-cat">Culture</span><span class="archive-title">Old Dog with New Tricks: India's Trans Amendment Bill 2026</span><span class="archive-meta">The Editors &nbsp;·&nbsp; 14 min</span></div>
+      <div class="archive-row" onclick="openArticle('ethnographic')"><span class="archive-cat">Culture</span><span class="archive-title">Ethnographic Report: Sector 120</span><span class="archive-meta">Yousuf Rami &nbsp;·&nbsp; 6 min</span></div>
+    </div>
+  </div>
+
+  <!-- SUBSCRIBE -->
+  <div class="subscribe-band hide-on-about">
+    <div>
+      <div class="sub-title">Cut Against the Grain</div>
+      <p class="sub-desc">Timber arrives fortnightly — essays, arguments, and provocations on politics, philosophy, economics, and the structures that shape ordinary life.</p>
+    </div>
+    <div class="sub-form">
+      <input class="sub-input" type="email" placeholder="your@email.com">
+      <button class="sub-btn">Subscribe</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-brand">Timber</div>
+    <div class="footer-links">
+      <a href="about.html">About</a>
+      <a href="#" onclick="goToTab('archive'); return false;">Archive</a>
+      <a href="#">Submit</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 Timber. All rights reserved.</div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════ ARTICLE OVERLAYS ═══════════════════════ -->
+
+<!-- EMPIRE OVERLAY -->
+<div class="article-overlay" id="overlay-empire">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('empire')">← Back to Timber</button>
+    <div class="overlay-cat">Politics · Imperial Decline · Issue 02</div>
+    <h1 class="overlay-headline">The Empire Always Ends: From Suez to Washington's Overreach</h1>
+    <p class="overlay-deck">Great powers do not fall because they are conquered. They fall because they overreach, alienate, and finally exhaust the very world that once tolerated their dominance.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>There is a recurring pattern in the history of great powers: they do not fall because they are conquered, they fall because they overreach, alienate, and finally exhaust the very world that once tolerated their dominance. Britain discovered this in the autumn of 1956, standing in the rubble of its imperial pretensions beside the Suez Canal. The United States, some seventy years later, appears determined to learn nothing from that lesson.</p>
+      <h2>The Suez Wound</h2>
+      <p>To understand Suez, one must understand what Britain believed it still was in 1956. The Second World War had technically left it on the winning side, but the economic cost had been catastrophic. Britain owed the United States roughly $4.33 billion under the Anglo-American Loan Agreement of 1945, a debt that would not be fully repaid until 2006. Despite this fiscal hollowing, London maintained the fiction of imperial authority over territories spanning from the Middle East to Southeast Asia.</p>
+      <p>When Egyptian President Gamal Abdel Nasser nationalized the Suez Canal Company in July 1956, Britain, France, and Israel devised a secret arrangement — the Protocol of Sèvres — to retake it by force. The plan was militarily successful and geopolitically catastrophic. President Dwight Eisenhower, furious at being excluded and alarmed by Soviet threats of nuclear intervention, forced Britain to withdraw, threatening to destabilize the pound sterling by selling U.S. holdings of British currency. Within weeks, Prime Minister Anthony Eden had resigned, the pound had lost nearly 15% of its value under speculative pressure, and Britain's claim to independent great-power status was permanently discredited.</p>
+      <div class="pull-quote"><p>"The Suez crisis did not cause the end of British hegemony — it merely revealed it."</p></div>
+      <p>The scaffolding of empire had been rotting for a decade. What Suez did was strip away the facade, forcing London to accept, publicly and humiliatingly, that its foreign policy could no longer operate independently of Washington's approval. By 1968, Britain had formally withdrawn its military forces from "East of Suez," ceding the entire Indo-Pacific strategic architecture to the United States.</p>
+      <h2>The American Parallel</h2>
+      <p>The United States today occupies a structurally analogous position to Britain in the early 1950s. It commands the world's largest military, its currency remains the dominant global reserve, and it possesses an unmatched network of alliances and bases. And yet the cracks are widening in ways that would be familiar to any historian of British decline.</p>
+      <p>Consider the economic dimension. The U.S. national debt surpassed $36 trillion in 2024, with annual interest payments exceeding $1 trillion for the first time in history. The dollar's share of global foreign exchange reserves has declined from roughly 71% in 2000 to approximately 58% in 2023, its lowest level in decades. The BRICS bloc, which added six new members in 2024 including Saudi Arabia and the UAE, has accelerated discussions around alternative settlement currencies, directly targeting dollar primacy.</p>
+      <p>Against this backdrop of fiscal fragility, American foreign policy has adopted an increasingly coercive and unilateralist posture. UN General Assembly resolutions condemning the U.S. embargo on Cuba have passed for over three decades, most recently in 2023 with 187 votes in favor and only two against. The pattern — collective international disapproval met with unilateral continuation — mirrors precisely the diplomatic isolation Britain suffered after Suez.</p>
+      <h2>Soft Power's Quiet Erosion</h2>
+      <p>Suez cost Britain not just a military campaign but a story. The narrative of benevolent empire — of the civilizing mission and the rule of law — collapsed overnight. Britain became, in the eyes of much of the world, simply another bully. It would spend the next generation rebuilding its international reputation through multilateral institutions, development aid, and cultural diplomacy.</p>
+      <p>The United States is now burning through its own narrative capital at an accelerating rate. The post-1945 liberal order, which Washington constructed and legitimized through institutions like the World Bank, the IMF, NATO, and the WTO, was predicated on the idea that American power served collective interests. Each sanctions regime imposed on a developing nation, each unilateral military action conducted without Security Council authorization, and each instance of weaponizing the dollar-denominated financial system erodes that premise. When soft power collapses, what remains is only hard power — and hard power without legitimacy is simply coercion, expensive, brittle, and ultimately self-defeating.</p>
+      <h2>What Comes Next</h2>
+      <p>If the Suez analogy holds, the American moment of reckoning will likely not arrive from a single dramatic confrontation but from an accumulation of self-inflicted wounds. Britain's decline was a twenty-year process of managed retreat, punctuated by periodic crises that each required a further concession of influence. The handover of Hong Kong in 1997 was the last formal chapter of a story that Suez had already written.</p>
+      <p>For the United States, the trajectory may involve a gradual loss of alliance coherence as partners in Europe and Asia hedge toward multipolarity, a dollar that retains utility but loses dominance, and an increasing inability to impose economic penalties as alternative financial infrastructure matures. The question is not whether American hegemony ends — all hegemonies end — but whether Washington manages that transition with enough strategic wisdom to remain a leading power in a multipolar order, or whether, like Britain in 1956, it forces a crisis that makes the ending sudden, humiliating, and unnecessarily damaging to itself and the world.</p>
+      <div class="pull-quote"><p>"History does not repeat, but it rhymes — and right now, the melody is very familiar."</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- POLITEIA OVERLAY -->
+<div class="article-overlay" id="overlay-politeia">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('politeia')">← Back to Timber</button>
+    <div class="overlay-cat">Politics · Theory · Issue 02</div>
+    <h1 class="overlay-headline">Politeia</h1>
+    <p class="overlay-deck">All of humanity holds a stake in the future of politics. Whether or not you care about politics, politics has an interest in you.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>Throughout history, numerous academics, political theorists and philosophers have debated the purpose of politics and political power. Many, including Thomas Hobbes and Max Weber, have identified the true meaning of politics as obedience and domination over others. For Hobbes, politics is fundamentally about imposing order to prevent chaos. Power — and control over it — remains a central theme among a lot of thinkers.</p>
+      <h2>Power and Contest</h2>
+      <p>For some, politics is the contest over and exercise of power. People associate politics with aspects of government — elections, politicians, policies — but politics occurs in any situation where there is competition over power. The phrase "office politics" is commonly used to refer to the contest over power in the workplace, such as when employees compete for promotions. Harold Lasswell defined politics as "who gets what, when, and how." Whenever people, groups, or countries compete over territory, wealth, privileges, or status, they are competing over power.</p>
+      <div class="pull-quote"><p>"Politics exists because power is scarce. There is not enough power for everyone to have as much as he or she wants, because power is relative."</p></div>
+      <h2>Arendt's Counter</h2>
+      <p>Such an interpretation is incredibly dangerous, closely aligning with the historical values of authoritarian and totalitarian governments. Hannah Arendt — someone who witnessed the rise and fall of Nazi Germany and fascism in Europe — changed the way we look at politics. Her thought emerged from critical engagement with both classical philosophy (especially Aristotle's polis) and the political catastrophes of the 20th century. Politics, in her view, is a way of being together, based on principles of equality and nonviolence, in which people decide what to do and how to live through open debate and common deliberation on matters of public concern.</p>
+      <p>For Aristotle, the central aim of the polis was the human good, and the study of politics was practical, making decisions about what forms of government and legislation would most promote the human good.</p>
+      <h2>Conflict as the Basis</h2>
+      <p>In the present times, every community comprises conflicting interests and values. Political situations arise out of disagreement. People have different opinions, viewpoints, and make different judgments — they differ from each other in such a variety of ways that it would be impossible to achieve agreement about everything. People disagree about how limited resources should be distributed, whether political power should be concentrated or dispersed, whether everything should be shared equally or whether some deserve more. Since there is not a single correct answer to such questions, politics is the art of finding peaceful resolutions to conflict, through compromise and the building of consensus.</p>
+      <p>Politics is difficult to define because of the contradiction between the broad and the narrow conceptions of politics. In the broader concept, politics is an activity universal to all societies, at all levels and all times — past, present and perhaps even the future. Not only is politics inevitable; its consequences are inescapable.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TRANS OVERLAY -->
+<div class="article-overlay" id="overlay-trans">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('trans')">← Back to Timber</button>
+    <div class="overlay-cat">Culture · Law · Human Rights · Issue 02</div>
+    <h1 class="overlay-headline">Old Dog with New Tricks: India's Trans Amendment Bill 2026 Is a Colonial Relic in Modern Clothing</h1>
+    <p class="overlay-deck">A bill introduced in the name of transgender people was designed to erase them — and it passed both houses of Parliament within two weeks.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>On March 13, 2026, Union Minister Virendra Kumar introduced the Transgender Persons (Protection of Rights) Amendment Bill in the Lok Sabha, and within hours, trans activists across India had read it. By the afternoon of March 16, lawyers, journalists, community organisers and queer activists had crowded into a room at the Women's Press Club in Delhi, pressed shoulder to shoulder, united by a shared and urgent recognition: a bill introduced in the name of transgender people had been designed to erase them.</p>
+      <p>The bill passed both houses within two weeks. The Lok Sabha cleared it by voice vote, amid an opposition walkout. The Rajya Sabha followed a day later. Parliament moved with remarkable speed on a bill that trans communities, legal experts, and human rights organisations across the country had condemned from the moment they laid eyes on it. The speed was telling. So was the silence.</p>
+      <h2>What the Bill Actually Does</h2>
+      <p>The government's stated intent is precision — to ensure that "benefits reach the deserving." What the bill delivers, however, is exclusion at scale. It strips away the most foundational right the 2019 Act had encoded: the right to self-perceived gender identity. Under the amended law, a transgender person may no longer obtain recognition through self-declaration. They must now appear before a Medical Board, headed by a Chief Medical Officer or Deputy Chief Medical Officer, and obtain the board's recommendation before a District Magistrate can issue an identity certificate.</p>
+      <p>The new definition is deliberately narrow. It limits recognition to persons with named socio-cultural identities — kinner, hijra, aravani, and jogta — or to those with congenital variations in chromosomes, hormones, or genitalia. Transmen, non-binary people, and transwomen outside the named socio-cultural categories have, in the words of one legal analysis, "vanished from the definition."</p>
+      <div class="pull-quote"><p>"The proviso states that the category of transgender person 'shall not include, nor shall ever have been so included' persons with self-perceived gender identities. It is a legislative attempt to unmake people."</p></div>
+      <h2>The Numbers Behind the Crisis</h2>
+      <p>As per the 2011 Census, India's transgender population is estimated at around 5 lakh, yet as of 2026, only approximately 32,000 identity cards have been issued under the existing system — already hindered by bureaucratic obstruction and official indifference. The National Human Rights Commission found that over 92% of transgender people are excluded from formal economic activity. Reports from the UNDP show that 60% of transgender adolescents drop out of school due to bullying. TMC MP Saket Gokhale stated on the floor of the Rajya Sabha that 31% of transgender people in India have attempted suicide because of discrimination.</p>
+      <h2>An Unconstitutional Bill</h2>
+      <p>The 2026 Amendment stands in direct defiance of settled constitutional law. The Supreme Court's 2014 landmark judgment in <em>National Legal Services Authority v. Union of India</em> (NALSA) was unambiguous: gender identity is self-perceived, medical procedures cannot be a precondition for legal recognition, and trans persons have an enforceable right to identity certification based on self-declaration. The 2026 Bill violates this directly.</p>
+      <h2>The British Did This First</h2>
+      <p>The most disturbing feature of the 2026 Bill may be the one its drafters seemed least concerned about: it is not new. The bill's logic — mandatory registration, medical inspection to determine identity, state surveillance of gender, and the creation of a class of suspicious, conditionally tolerated gender non-conforming persons — was first deployed by the British Crown in 1871.</p>
+      <p>Part II of the Criminal Tribes Act, 1871 was titled "Of Eunuchs." It mandated that district police maintain registers of "eunuchs reasonably suspected of sodomy, kidnapping or castration." The explicit goal, documented in colonial correspondence as early as 1865, was the "gradual extinction" of the hijra community. The word "eunuch" has now been inserted into the 2026 Amendment Bill — a supposed protection statute — as a formal legal category. The circle of colonial logic has been closed, not broken.</p>
+      <h2>Erasing a History That Cannot Be Erased</h2>
+      <p>The irony is that India, more than perhaps any other civilisation, has a recorded history of gender diversity that predates the British effort to eradicate it by millennia. Hijras are celebrated in the Mahabharata. The Kama Sutra acknowledges a third nature. It was British colonialism, not Indian tradition, that introduced the paranoia of the binary.</p>
+      <div class="pull-quote"><p>"India cannot simultaneously celebrate its transgender heritage in tourist brochures and erase transgender people from its statute books."</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- PINK TAX OVERLAY -->
+<div class="article-overlay" id="overlay-pinktax">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('pinktax')">← Back to Timber</button>
+    <div class="overlay-cat">Economics · Gender · Issue 02</div>
+    <h1 class="overlay-headline">The Pink Tax in India: A Hidden Levy India Can No Longer Afford to Ignore</h1>
+    <p class="overlay-deck">Walk into any pharmacy in India, and the numbers tell a troubling story. This is not a women's issue. It is a structural economic issue that needs structural solutions.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>Walk into any pharmacy or supermarket in India, and the numbers tell a troubling story. A pack of disposable razors for women costs more than the same product for men. A pink-handled loofah is priced higher than its blue counterpart. Clothes, shampoos, deodorants, and skincare products are often more expensive when aimed at women. This issue, known globally as the "pink tax," isn't an official tax. However, it's a real economic burden woven into everyday spending, with measurable effects on India's economic health.</p>
+      <h2>An Economic Weight on Half the Population</h2>
+      <p>The Indian economy is consumption-led, with private consumption accounting for almost 57% of GDP. Women constitute about 48% of the Indian population. Although they have one of the lowest labour participation rates among the G20 nations (about 24%), they are significant consumers at the household level. Their real disposable income is eroded over time by the pink tax.</p>
+      <p>Consider the cumulative effect: a woman who spends 7–13% more on clothing, personal care and hygiene products loses a large sum that could have been saved, invested or consumed at a higher value. US studies indicate that the premium amounts to about $1,300 a year for women. Beyond the personal loss, the pink tax also worsens India's gender wage gap, which shows that women are paid around 19% less than men for doing the same job.</p>
+      <div class="pull-quote"><p>"Period poverty is not just a sentiment. When sanitary products are too expensive, girls miss school — and missing school means lower lifetime earnings, lower productivity, lower GDP."</p></div>
+      <h2>Global Context: What Other Countries Have Done</h2>
+      <p>In January 2021, the United Kingdom finally removed the 5% VAT on menstrual products after many years of advocacy. Australia removed its Goods and Services Tax on sanitary products in 2019 after a persistent lobbying movement. Canada was first in 2015 to remove the federal sales tax on period products. Germany eliminated its tampon tax from 19% to 7% by reclassifying period products from luxury items to essential items in 2020.</p>
+      <h2>Policy Progress in India — And the Road That Remains</h2>
+      <p>India has taken an important but insufficient step. In July 2018, after extensive lobbying by civil society and lawmakers, the GST Council lowered the tax on sanitary napkins from 12% to zero. Under the Pradhan Mantri Bhartiya Janaushadhi Pariyojana (PMBJP) scheme, the government has supplied subsidised sanitary pads under the brand name "Suvidha" at Rs. 1 per pad at Jan Aushadhi Kendras. A laudable step, but merely the tip of the iceberg.</p>
+      <p>There is no regulatory framework in India that formally prohibits gender-based pricing discrimination in any sector other than taxes. India has a dream of becoming a developed economy by 2047. That dream will be hollow if it does not encompass the full economic activity of half its population.</p>
+      <p style="font-size:14px; color: var(--muted); font-style: italic;">— Anvita Tomar</p>
+    </div>
+  </div>
+</div>
+
+<!-- QUEER ECONOMICS OVERLAY -->
+<div class="article-overlay" id="overlay-queer">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('queer')">← Back to Timber</button>
+    <div class="overlay-cat">Economics · LGBTQIA+ · Issue 02</div>
+    <h1 class="overlay-headline">Queer Out of the Economy? Exclusionary Implications for Macroeconomic Analysis</h1>
+    <p class="overlay-deck">An economy that systematically excludes a group of people is operating below its potential. Ignoring LGBTQIA+ exclusion is not only a moral failing — it is a macroeconomic opportunity cost.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>Macroeconomic theory is often touted for its neutrality. If markets reward merit and states ensure fairness, shouldn't macroeconomic aggregates like growth and employment be considered separate from individual identities? We argue that this is a false dichotomy. Since queer economic exclusions are entrenched in labor markets, healthcare, and institutions at large, ignoring the injustice faced by LGBTQIA+ people is not only a moral failing but also a macroeconomic opportunity cost. An economy that systematically excludes a group of people is operating below its potential.</p>
+      <h2>Exclusion in the Labor Market</h2>
+      <p>LGBTQIA+ people are systematically excluded from both the labor market and the real economy. Individuals are excluded from being hired, are paid less in wages, do not experience career progression, and are excluded from creating quality spaces at work. Lower rates of labor force participation affect aggregate output directly. Since queer economic exclusion weakens the real economy, it also leads to lower aggregate demand in the economy.</p>
+      <p>In India, the decriminalisation of homosexuality in 2018 was a watershed moment. However, the lack of comprehensive anti-discrimination protection in the labor market and the heterogeneity of workplace policies have meant limited economic integration. LGBTQIA+ individuals continue to face discrimination and bias in job security, wages, and benefits.</p>
+      <div class="pull-quote"><p>"A market is a true market when the outcome is based on effort and ability, not identity."</p></div>
+      <h2>The Case for Inclusion as Investment</h2>
+      <p>There is an increasing body of evidence that inclusion has direct economic benefits. Inclusive work practices are associated with greater retention rates, productivity, and innovation. LGBTQIA+ diversity is valuable, as it allows for a plurality of viewpoints. On a national level, inclusion and respect for LGBTQIA+ rights attract more foreign investment and skilled labour, as inclusivity signals stability and progressiveness.</p>
+      <p>To consider LGBTQIA+ economic rights as a marginal issue in macroeconomic analysis would be detrimental to the discipline. An efficient economy that excludes is a waste. An economy that excludes is an economy that underperforms. Whether the world is able to attain greater levels of economic, social, and environmental well-being in the twenty-first century is largely dependent on economic inclusion.</p>
+      <p style="font-size:14px; color: var(--muted); font-style: italic;">— Shabd Tanwar</p>
+    </div>
+  </div>
+</div>
+
+<!-- BRAIN DRAIN OVERLAY -->
+<div class="article-overlay" id="overlay-braindrain">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('braindrain')">← Back to Timber</button>
+    <div class="overlay-cat">Economics · Migration · Issue 02</div>
+    <h1 class="overlay-headline">Why India's Best Talent Leaves and Never Returns</h1>
+    <p class="overlay-deck">There is a type of grief that Indians abroad are all too familiar with — the grief of watching, from a distance, the country that defined everything about you continue to struggle with the same issues that forced you to leave.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>India loses between 200,000 and 500,000 of its best and brightest each year. They are engineers, doctors, researchers, financiers, and academics. They go to the United States, Canada, Australia, the United Kingdom, Germany, and they build companies, win Nobel prizes, run hospitals and universities and hedge funds. And they do not, for the most part, return.</p>
+      <h2>The Infrastructure of Daily Frustration</h2>
+      <p>The easy answer is money. But that is only partially true, and increasingly, it is becoming less true. A senior software engineer at a Bengaluru startup today earns salaries that would have seemed fantastical fifteen years ago. So if money alone explained the exodus, we would expect to see it slowing. We do not.</p>
+      <p>What drives people out is harder to quantify, but anyone who has lived it can describe it immediately. It is the three hours lost every day to traffic that should take twenty minutes. It is the air quality index in Delhi that reads 400 in November. It is the fourteen-step government process to get a basic business license, in which seven of the steps seem specifically designed to create opportunities for informal payments.</p>
+      <div class="pull-quote"><p>"A brilliant twenty-six-year-old researcher weighing two job offers — Hyderabad or Boston — is making a decision about the quality of the roads she'll drive on, the schools her future children will attend, and whether her merit will be the first criterion upon which she's judged."</p></div>
+      <h2>The Research Problem Nobody Wants to Talk About</h2>
+      <p>India produces more STEM graduates than almost any country on earth. It does not produce a proportional share of the world's scientific output. The reason is not intellect. The reason is resources, bureaucracy, and the absence of a culture that genuinely rewards curiosity over credentials. A researcher in an American university has access to well-funded labs, a speedy grant pipeline, graduate students eager to collaborate, and a peer network with global reach. A researcher at an IIT often spends a significant portion of their working hours coping with delays in procurement, grant pipelines that take years, and course loads that leave little time for original work.</p>
+      <h2>Why They Don't Come Back</h2>
+      <p>The more interesting and painful question is not why people leave. It is why, even when they want to return — and many do want to, genuinely — they often cannot make it work. Talk to Indians in the diaspora, and a version of the same story surfaces again and again. They tried coming back. They came back with savings, with skills, with connections, sometimes with families in tow. And then the reality of operating in India hit them — not dramatically, but through accumulation.</p>
+      <h2>What Would Actually Change Things</h2>
+      <p>The larger shift that India needs to make is more difficult to codify. It is a cultural shift — in the way that institutions interact with the people they are ostensibly set up to serve. When a government agency processes your application on time, without requiring you to have a connection, it is not doing you a favour. It is simply doing its job. Until institutions genuinely serve citizens rather than the other way around, the talented and the impatient will continue to find that their patience runs out somewhere over the Atlantic.</p>
+      <p>India will survive its brain drain. The question is not whether India can absorb the loss. It is whether India can afford, in the long run, to keep building one of the world's most sophisticated talent pipelines only to have the finished product complete its career in California, Ontario or Singapore.</p>
+    </div>
+  </div>
+</div>
+
+<!-- NIHILISM OVERLAY -->
+<div class="article-overlay" id="overlay-nihilism">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('nihilism')">← Back to Timber</button>
+    <div class="overlay-cat">Philosophy · Culture · Issue 02</div>
+    <h1 class="overlay-headline">The Comfortable Abyss: On Nihilism and the World It Is Building</h1>
+    <p class="overlay-deck">This is nihilism. Not the dramatic, black-clad philosophy of adolescent rebellion, but its mature, socially acceptable descendant — the version that wears athleisure and calls itself "realistic."</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>There is a particular kind of exhaustion that does not announce itself. It does not arrive with grief or fury. It arrives as a shrug. A scroll. A second episode, then a third. It arrives as the quiet, reasonable-sounding conviction that nothing, really, matters all that much, and that the person who told you otherwise was probably trying to sell you something.</p>
+      <h2>Nietzsche's Warning, Misread as an Invitation</h2>
+      <p>Friedrich Nietzsche did not invent nihilism. He diagnosed it. In the late nineteenth century, watching European civilisation loosen its grip on religious meaning and find nothing waiting beneath it, Nietzsche wrote that nihilism was "the most uncanny of all guests," already standing at the door. God — meaning the entire architecture of shared moral purpose — was dead, not murdered but outgrown. And in that vacancy, Nietzsche saw not liberation but catastrophe. His warning was precise: a civilisation that finds nothing to believe in will not remain peacefully empty. It will fill the void with something far worse.</p>
+      <p>His proposed answer — the Übermensch, the individual who creates their own values from the rubble — was never meant as permission to surrender. It was a desperate, difficult call to construction. What the modern world took from him instead was the demolition, and left the construction untouched.</p>
+      <div class="pull-quote"><p>"Commitment — to a cause, a community, a set of principles — is treated with a faint suspicion. 'Don't be so serious,' the culture says, and then wonders why nothing holds."</p></div>
+      <h2>The Hedonism Nobody Names</h2>
+      <p>When a philosophy tells you nothing means anything, the body does not respond with stoic calm. It responds with appetite. If no choice is more meaningful than another, then comfort becomes the only rational criterion. Pleasure becomes the only honest currency. This is how nihilism quietly colonises ordinary life — not through argument but through atmosphere.</p>
+      <h2>The Tyranny That Follows the Void</h2>
+      <p>Nietzsche's real prophecy — the one we have been slow to take seriously — is political. A population that believes in nothing is not free. It is available. Meaning is not a luxury. It is the load-bearing wall of democratic life. People who believe their choices matter, that history bends toward something, that there is a shared world worth protecting, will resist. People who believe in nothing will, eventually, accept anything — not from cowardice but from a kind of logical consistency. If nothing matters, then resistance is theatre and compliance is simply efficient.</p>
+      <h2>Against the Shrug</h2>
+      <p>None of this is to argue for false certainty or manufactured faith. The honest acknowledgment that the universe offers no pre-written purpose is not wrong. It is simply incomplete. Meaninglessness is a starting condition, not a conclusion. The question was never whether meaning exists objectively, waiting to be discovered like a buried coin. The question is whether human beings are capable of building it — together, imperfectly, at great cost — and whether we still have the nerve to try.</p>
+    </div>
+  </div>
+</div>
+
+<!-- POSTMODERN OVERLAY -->
+<div class="article-overlay" id="overlay-postmodern">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('postmodern')">← Back to Timber</button>
+    <div class="overlay-cat">Philosophy · Critical Theory · Issue 02</div>
+    <h1 class="overlay-headline">The Paralysis of Endless Interpretation</h1>
+    <p class="overlay-deck">How postmodernism, Foucault, Derrida, and the dissolution of objective truth became capitalism's most elegant ideological shield — and what Marx would have made of all of it.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>There is a peculiar irony at the heart of postmodern thought. A philosophical tradition born from radical disillusionment with the status quo — from the wreckage of colonialism, from the failures of both liberal democracy and Soviet communism — has arguably become one of the most powerful ideological shields that the capitalist order has ever enjoyed. Not through coercion, not through propaganda, but through the far more elegant mechanism of convincing the left that there is no ground firm enough to stand on from which to fight back.</p>
+      <h2>Foucault's Radical Inheritance</h2>
+      <p>To understand how this happened, we need to begin with Michel Foucault, the French philosopher whose shadow stretches across nearly every humanities department in the Western world. His concept of <em>pouvoir-savoir</em> — power-knowledge — demonstrated that what counts as "truth" in any given era is inseparable from the power structures that produce and enforce it. The asylum does not merely confine the mad; it creates the very concept of madness as a means of social control.</p>
+      <p>This is a profound and genuinely illuminating insight. The problem arrives when it is pushed to its logical extreme: if all truth is a product of power, then there is no truth at all — only competing narratives, each equally valid or equally suspect. This is the epistemological core of postmodernism, and it is where the radical critique quietly begins its transformation into a paralytic fog.</p>
+      <div class="pull-quote"><p>"You cannot build a labor movement on the premise that 'labor' is a discursive category. You cannot organize the dispossessed around the idea that dispossession is a narrative frame."</p></div>
+      <h2>Capital's Fog Machine</h2>
+      <p>Consider what this means in practice. If there is no objective truth, then the claim that capitalism produces systemic exploitation is merely one narrative among many. The empirical reality of wage suppression, wealth concentration, and precarious employment becomes not a fact to be mobilized politically but a "position" to be endlessly interrogated, deconstructed, and complicated. The result is a left that is extraordinarily good at critique and almost constitutionally incapable of constructing the kind of collective political project that might actually threaten capital.</p>
+      <h2>Derrida and the Limits of Différance</h2>
+      <p>The most revealing case study is Jacques Derrida. His method of deconstruction holds that every text, every system of meaning, is haunted by instability. Meaning is endlessly deferred, never fully present, always sliding — <em>différance</em>. In <em>Specters of Marx</em> (1993), Derrida returned to Marx as a thinker of justice. But a "messianism without messiah" is philosophically elegant and practically useless. You cannot strike for an ineffable horizon.</p>
+      <div class="pull-quote"><p>"The rent comes due every month, and it is perfectly objective about it."</p></div>
+      <h2>What Marx Would Have Said</h2>
+      <p>Marx would have had little patience for any of this. For Marx, the point of philosophy was not merely to interpret the world but to change it — and changing it requires understanding it accurately. Historical materialism rests on the conviction that class struggle is not a metaphor but an actual conflict between groups with genuinely opposed material interests.</p>
+      <p>The crisis of the contemporary left is in no small part a crisis of epistemological confidence. Capital does not suffer from this problem. It knows exactly what it wants. The left, lost in a labyrinth of its own constructing, keeps questioning whether "wanting" is itself a coherent category. Meanwhile, the rent comes due every month, and it is perfectly objective about it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- BASTAR OVERLAY -->
+<div class="article-overlay" id="overlay-bastar">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('bastar')">← Back to Timber</button>
+    <div class="overlay-cat">Politics · Reportage · Issue 02</div>
+    <h1 class="overlay-headline">The Last Forest: What India Is Really Doing in Bastar</h1>
+    <p class="overlay-deck">Operation Kagar has a deadline, a bounty system, and 60,000 troops. What it does not have is an honest answer to why the war exists in the first place.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>On the 31st of March, 2026, the Indian government wanted to have erased Naxalism from the map. Home Minister Amit Shah had set the deadline himself. Operation Kagar — named from the Hindi word for "brink" — was the instrument: 60,000 to 100,000 security personnel, Israeli drones, satellite imaging, 612 fortified police stations, a generous bounty system offering up to Rs 25 lakh per dead Naxalite, and a public relations vocabulary that substituted the word "neutralised" for "killed." The state had given itself a deadline to finish a war. What it had not given itself was a reason to ask why the war existed in the first place.</p>
+      <h2>Not Maoists. Survivors.</h2>
+      <p>The standard framing of the Naxal conflict is ideological: a ragtag army of Maoist insurgents, children of a dead Chinese revolution, clinging to a discredited doctrine in India's red corridor. This framing is enormously useful to the state and almost entirely false. The Naxalbari uprising of 1967 was not born in a library. It was born in a field, when sharecroppers in West Bengal rose against landlords who had beaten and robbed them for generations.</p>
+      <p>Adivasis constitute roughly 8 percent of India's population. Yet they account for more than 50 percent of the over 20 million people displaced by mining and industrial projects since 1947. The UN Committee on the Elimination of Racial Discrimination has reported that at least 500 Adivasi individuals were killed in Bastar between January 2024 and October 2025, with many of the encounters alleged to be staged extrajudicial killings of unarmed villagers labelled post-mortem as Maoists.</p>
+      <div class="pull-quote"><p>"The adivasi who picks up a weapon in the forests of Abujhmarh is not a disciple of Mao Zedong. Calling this Maoism is the intellectual equivalent of calling the 1857 uprising a 'mutiny.'"</p></div>
+      <h2>Internal Colonialism in a Democracy</h2>
+      <p>The language of internal colonialism is not hyperbolic in this context. It is precise. The central and eastern Indian heartland — the precise geography of the Naxal conflict — sits on top of some of the richest mineral deposits in the country: coal, iron ore, bauxite, and uranium. The regions targeted by Operation Kagar are not red because they are ideologically infected. They are red because the people who live there have repeatedly, consistently, constitutionally said "no," and been answered with force.</p>
+      <h2>The Deadline and the Bodies</h2>
+      <p>The March 2026 deadline produced exactly the kind of violence deadlines produce. In just the first three months of 2025, more than 140 alleged Maoists were killed in Chhattisgarh — already accounting for more than half the state's total toll for the entirety of 2024. The rise was directly correlated to the bounty system, a financial incentive to produce bodies regardless of whether those bodies were armed combatants.</p>
+      <h2>What Operation Kagar Is Completing</h2>
+      <p>History, in the forests of central India, is being actively erased. The adivasi resistance against colonial and post-colonial dispossession is one of the most sustained, principled, and consequential struggles in modern Indian history. What Operation Kagar is completing, in this sense, is a 150-year project. The British wanted the minerals and the timber. Contemporary India wants the minerals and the minerals. The adivasi sits, as they have always sat, directly on top of what someone more powerful has decided they cannot keep.</p>
+      <div class="pull-quote"><p>"The question of what a democratic republic owes the people it has spent seventy-eight years systematically dispossessing is not a Maoist question. It is a constitutional one."</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ETHNOGRAPHIC OVERLAY -->
+<div class="article-overlay" id="overlay-ethnographic">
+  <div class="overlay-inner">
+    <button class="overlay-close" onclick="closeArticle('ethnographic')">← Back to Timber</button>
+    <div class="overlay-cat">Culture · Ethnography · Issue 02</div>
+    <h1 class="overlay-headline">Ethnographic Report: Sector 120</h1>
+    <p class="overlay-deck">A closer analysis of social norms and behaviours in public leisure places — and what the Noida authority park reveals about the cultural hegemony just beneath the surface.</p>
+    <div class="overlay-divider"></div>
+    <div class="overlay-body">
+      <p>This ethnographic report regarding social norms and behaviours in public leisure places focuses on Sector 120, specifically the Noida authority park, which is the primary focus of this text. Situated in one of the wealthiest urban regions in Noida, between multiple gated societies — one of which has been my place of residence for about 12 years — the park offers a remarkably concentrated field site.</p>
+      <p>The footfall in these parts is not homogenous, people from all walks of life visit and deem the park a place of recreation. The time of the day dictates the variety of both people and expected behaviours. Mornings are a time to get together, exercise, or to take your dog for a walk; afternoons a time for rest or picnic, largely limited to elders and families taking a break from their usual day. The evening is when we see the youth — especially teenagers between the ages fifteen and nineteen — living up to their rebellious natures.</p>
+      <div class="pull-quote"><p>"The existence of such public places itself is a neo-liberal nightmare — how can something exist, free from self-interest, used by all, owned by none, and from which no capital can be derived?"</p></div>
+      <p>Gestures or habits or quirks are viewed with a different lens here. One could sit a certain way, eat a certain way, and be perceived as higher or lower in imaginary self-demeaning hierarchies where people are placed with no former investigation. Women's body language remains too restricted — constantly on their toes, their exposure still a bigger issue for most Indians than holding accountable their male counterparts.</p>
+      <p>Couple behaviour is a big talking point. Evenings are a busy time for this group — dim lights and minimal risk of recognition, they come out — but are regularly heckled, needlessly questioned, pointed at, ridiculed, and sometimes even kicked out. Moral policing is not the only authority making an impact. The park and the streets surrounding it are judged by local influence, by the various residential welfare associations, who see fit when they like to kick away vendors, maintain surveillance and be the judge for everyone's cases.</p>
+      <p>India has a long way to go in rectifying its problematic cultural footprints. Any change, for the better or the worse, would be first noticeable in places of public convenience. Ignorance is compliance.</p>
+      <p style="font-size:14px; color: var(--muted); font-style: italic;">— Yousuf Rami</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─── TAB SWITCHING ───────────────────────────────────────────────
+  function switchTab(e, section) {
+    e.preventDefault();
+
+    // Update active nav link
+    document.querySelectorAll('.nav-strip a').forEach(function(a) {
+      a.classList.remove('active');
+    });
+    e.currentTarget.classList.add('active');
+
+    if (section === 'archive') {
+      // Hide all regular content sections, show archive
+      document.querySelectorAll('[data-section]').forEach(function(el) {
+        if (el.classList.contains('archive-page')) {
+          el.style.display = '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    } else {
+      // Show/hide elements based on their data-section attribute
+      document.querySelectorAll('[data-section]').forEach(function(el) {
+        if (el.classList.contains('archive-page')) {
+          el.style.display = 'none';
+          return;
+        }
+        // data-section can contain multiple values e.g. "all politics"
+        var sections = el.getAttribute('data-section').split(' ');
+        var shouldShow;
+        if (section === 'all') {
+          shouldShow = sections.indexOf('all') !== -1;
+        } else {
+          shouldShow = sections.indexOf(section) !== -1;
+        }
+
+        if (shouldShow) {
+          el.style.display = '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll back to top of content
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Hide non-about utility blocks when viewing About
+    document.querySelectorAll('.hide-on-about').forEach(function(el) {
+      el.style.display = section === 'about' ? 'none' : '';
+    });
+  }
+
+  function goToTab(section) {
+    var tab = document.querySelector('.nav-strip a[data-tab="' + section + '"]');
+    if (tab) {
+      tab.click();
+    }
+  }
+
+  // ─── ARTICLE OVERLAYS ────────────────────────────────────────────
+  function openArticle(id) {
+    var overlay = document.getElementById('overlay-' + id);
+    if (!overlay) return;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    overlay.scrollTop = 0;
+  }
+
+  function closeArticle(id) {
+    var overlay = document.getElementById('overlay-' + id);
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close overlay on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.article-overlay.open').forEach(function(el) {
+        el.classList.remove('open');
+      });
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Close overlay on backdrop click
+  document.querySelectorAll('.article-overlay').forEach(function(overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
